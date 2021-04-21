@@ -18,11 +18,11 @@ int main()
 	double PLZ, building_length, building_width, building_height, slope_roof, roof_edge_distance, roof_area;
 	string project_name, project_site, project_country, person_in_charge;
 
-	/*cout << "Enter please the Project's General Data:\n";
+	cout << "Enter please the Project's General Data:\n";
 	cout << "Project Name:  "; cin >> project_name;
 	cout << "Postal Code: "; cin >> PLZ;
 	cout << "Postal Site: "; cin >> project_site;
-	cout << "Postal Country: "; cin >> project_country;*/
+	cout << "Postal Country: "; cin >> project_country;
 	cout << "Person in Charge of this Project: "; cin >> person_in_charge;
 
 	cout << person_in_charge << ", Enter please the Project's Building Data:\n";
