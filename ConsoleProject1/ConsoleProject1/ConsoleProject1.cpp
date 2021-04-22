@@ -21,8 +21,8 @@ int main()
 	cout << "Enter please the Project's General Data:\n";
 	cout << "Project Name:  "; cin >> project_name;
 	cout << "Postal Code: "; cin >> PLZ;
-	cout << "Postal Site: "; cin >> project_site;
-	cout << "Postal Country: "; cin >> project_country;
+	cout << "Project Site: "; cin >> project_site;
+	cout << "Project Country: "; cin >> project_country;
 	cout << "Person in Charge of this Project: "; cin >> person_in_charge;
 
 	cout << person_in_charge << ", Enter please the Project's Building Data:\n";

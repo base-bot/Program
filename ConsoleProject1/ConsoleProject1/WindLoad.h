@@ -15,7 +15,7 @@ public:
 	WindLoad& operator = (const WindLoad&);						//copy assignment
 
 	double calculate_turbulence_intensity(double z, double z_min, string category);
-	double calculate_mean_wind_velocity_NA1(double v_basic_0, double z, double z_min);
+	double calculate_mean_wind_velocity_NA1(double v_basic_0, double z, string category);
 	double calculate_mean_wind_velocity_NA2(double v_basic_0, double z, double z_min);
 	double calculate_q_p(double mean_velocity, double Iv);
 

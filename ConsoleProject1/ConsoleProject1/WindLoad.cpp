@@ -81,7 +81,64 @@ double WindLoad::calculate_turbulence_intensity(double z, string category) {
 	}
 }
 
-double WindLoad::calculate_mean_wind_velocity_NA1(double v_basic_0, double z, double z_min) {
-	double mean_velocity_1;
+double WindLoad::calculate_mean_wind_velocity_NA1(double v_basic_0, string category) {
+	double mean_velocity_1, z_min;
+	double probability_factor = 1; //This should be then adapted based on the return period: 5,10, 15, 25, 50 years...
 
+	double return_period;
+	cout << "please enter the return period used to obtain the basic wind velocity = "; cin >> return_period;
+	if (return_period < 2) {
+
+	}
+	double v_b = v_basic_0 * probabiltiy_factor;
+	
+	switch (category) {
+	case "null":
+		cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
+
+	case "I":
+		z_min = 2;
+		if (z < z_min) {
+			Iv = 0.17;
+			return Iv;
+		}
+		else {
+			Iv = 0.14 * pow(z / 10, -0.12);
+			return Iv;
+		}
+		break;
+	case "II":
+		z_min = 4;
+		if (z < z_min) {
+			Iv = 0.22;
+			return Iv;
+		}
+		else {
+			Iv = 0.19 * pow(z / 10, -0.16);
+			return Iv;
+		}
+		break;
+	case "III":
+		z_min = 8;
+		if (z < z_min) {
+			Iv = 0.29;
+			return Iv;
+		}
+		else {
+			Iv = 0.28 * pow(z / 10, -0.22);
+			return Iv;
+		}
+		break;
+	case "IV":
+		z_min = 16;
+		if (z < z_min) {
+			Iv = 0.37;
+			return Iv;
+		}
+		else {
+			Iv = 0.43 * pow(z / 10, -0.3);
+			return Iv;
+		}
+		break;
+	}
 }
