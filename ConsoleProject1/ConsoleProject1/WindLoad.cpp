@@ -3,12 +3,14 @@
 
 WindLoad::WindLoad() {
 	wind_zone = 0;
+	height_structure = 0;
 	height_above_sea_level = 0.0;
-	terrain_category = 'null';
+	terrain_category = "null";
 }
 
-WindLoad::WindLoad(int zone, double sea_level, char category) {
+WindLoad::WindLoad(int zone, double sea_level, double z, string category) {
 	wind_zone = zone;
+	height_structure = z;
 	height_above_sea_level = sea_level;
 	terrain_category = category;
 }
@@ -16,6 +18,7 @@ WindLoad::WindLoad(int zone, double sea_level, char category) {
 WindLoad::WindLoad(const WindLoad& WL) {
 	wind_zone = WL.wind_zone;
 	height_above_sea_level = WL.height_above_sea_level;
+	height_structure = WL.height_structure;
 	terrain_category = WL.terrain_category;
 }
 
@@ -23,20 +26,28 @@ WindLoad& WindLoad::operator = (const WindLoad& WL) {
 	if (this != &WL) {
 		wind_zone = WL.wind_zone;
 		height_above_sea_level = WL.height_above_sea_level;
+		height_structure = WL.height_structure;
 		terrain_category = WL.terrain_category;
 	}
 	return *this;
 }
 
-double WindLoad::calculate_turbulence_intensity(double z, char category) {
+double WindLoad::calculate_turbulence_intensity(double z, string category) {
 	double z_min;
 	double Iv;
-	switch (category) {
-	case 'null':
-		cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
-		cout << "Terrain Category = "; cin >> category;
-		return category;
-	case 'I':
+	
+	while (category != "I" && category != "II" && category != "III" && category != "IV") {
+		if (category == "null"){
+			cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
+			cout << "Terrain Category = "; cin >> category;
+		}
+		else {
+			cout << "you have entered a False Terrain Category, please retry using I, II, III, IV" << endl;
+			cout << "Terrain Category = "; cin >> category;
+		}
+	}
+		
+	if (category == "I"){
 		z_min = 2;
 		if (z < z_min) {
 			Iv = 0.17;
@@ -46,8 +57,9 @@ double WindLoad::calculate_turbulence_intensity(double z, char category) {
 			Iv = 0.14 * pow(z / 10, -0.12);
 			return Iv;
 		}
-		break;
-	case 'II':
+	}
+		
+	else if(category == "II"){
 		z_min = 4;
 		if (z < z_min) {
 			Iv = 0.22;
@@ -57,8 +69,9 @@ double WindLoad::calculate_turbulence_intensity(double z, char category) {
 			Iv = 0.19 * pow(z / 10, -0.16);
 			return Iv;
 		}
-		break;
-	case 'III':
+	}
+		
+	else if (category == "III"){
 		z_min = 8;
 		if (z < z_min) {
 			Iv = 0.29;
@@ -68,8 +81,8 @@ double WindLoad::calculate_turbulence_intensity(double z, char category) {
 			Iv = 0.28 * pow(z / 10, -0.22);
 			return Iv;
 		}
-		break;
-	case 'IV':
+	}
+	else if (category == "IV"){
 		z_min = 16;
 		if (z < z_min) {
 			Iv = 0.37;
@@ -79,11 +92,11 @@ double WindLoad::calculate_turbulence_intensity(double z, char category) {
 			Iv = 0.43 * pow(z / 10, -0.3);
 			return Iv;
 		}
-		break;
 	}
+	
 }
 
-double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, char category) {
+double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, string category) {
 	double mean_velocity_1, z_min;
 	double probability_factor = 1; //This should be then adapted based on the return period: 5,10, 15, 25, 50 years...
 
@@ -97,11 +110,18 @@ double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, ch
 	}
 	double v_b = v_basic_0 * probability_factor;
 	
-	switch (category) {
-	case 'null':
-		cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
+	while (category != "I" && category != "II" && category != "III" && category != "IV") {
+		if (category == "null"){
+			cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
+			cout << "Terrain Category = "; cin >> category;
+		}
+		else {
+			cout << "you have entered a False Terrain Category, please retry using I, II, III, IV" << endl;
+			cout << "Terrain Category = "; cin >> category;
+		}
+	}
 
-	case 'I':
+	if (category == "I"){
 		z_min = 2;
 		if (z < z_min) {
 			mean_velocity_1 = 0.97*v_b;
@@ -111,8 +131,8 @@ double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, ch
 			mean_velocity_1 = 1.18 * v_b * pow(z / 10, 0.12);
 			return mean_velocity_1;
 		}
-		break;
-	case 'II':
+	}
+	else if (category == "II"){
 		z_min = 4;
 		if (z < z_min) {
 			mean_velocity_1 = 0.86 * v_b;
@@ -122,8 +142,8 @@ double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, ch
 			mean_velocity_1 = v_b * pow(z / 10, 0.16);
 			return mean_velocity_1;
 		}
-		break;
-	case 'III':
+	}	
+	else if (category == "III"){
 		z_min = 8;
 		if (z < z_min) {
 			mean_velocity_1 = 0.74 * v_b;
@@ -133,8 +153,8 @@ double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, ch
 			mean_velocity_1 = 0.77 * v_b * pow(z / 10, 0.22);
 			return mean_velocity_1;
 		}
-		break;
-	case 'IV':
+	}
+	else if (category == "IV"){
 		z_min = 16;
 		if (z < z_min) {
 			mean_velocity_1 = 0.64 * v_b;
@@ -144,11 +164,10 @@ double WindLoad::calculate_mean_wind_velocity_NA1(double z, double v_basic_0, ch
 			mean_velocity_1 = 0.56 * v_b * pow(z / 10, 0.3);
 			return mean_velocity_1;
 		}
-		break;
 	}
 }
 
-double WindLoad::calculate_mean_wind_velocity_NA2(double z, double v_basic_0, char category) {
+double WindLoad::calculate_mean_wind_velocity_NA2(double z, double v_basic_0, string category) {
 	double vm1 = calculate_mean_wind_velocity_NA1(z, v_basic_0, category);
 	double topography_factor = 1;   //This should be then updated with a function based on Annex A.3
 	

@@ -3,7 +3,7 @@
 
 //#include <iostream>
 #include <ios>
-#include "WindLoad.cpp"
+#include "WindLoad.h"
 
 //using namespace std;
 
@@ -101,7 +101,7 @@ int main()
 	double mounting_system_surface_weight = 1.9; //This needs to be updated depending on the new system and if a new middle rail is added....basically taking into consideration all possible varieties
 	// surface_dead_weight = (module_weight / (module_length * module_width)) + mounting_system_surface_weight;
 	int zone = 1;
-	double hasl = 500.0; double z = 6.0; char tc = 'II';
+	double hasl = 500.0; double z = 6.0; string tc = "null";
 	WindLoad WL(zone, hasl, z, tc);
 	double Iv = WL.calculate_turbulence_intensity(z, tc);
 	cout<< Iv <<endl;
