@@ -95,16 +95,19 @@ int main()
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//Characteristic of PV System
-	double surface_dead_weight, ridge_gap;
-	bool side_deflector;
+	/*double surface_dead_weight, ridge_gap;
+	bool side_deflector;*/
 
 	double mounting_system_surface_weight = 1.9; //This needs to be updated depending on the new system and if a new middle rail is added....basically taking into consideration all possible varieties
 	// surface_dead_weight = (module_weight / (module_length * module_width)) + mounting_system_surface_weight;
 	int zone = 1;
-	double hasl = 500.0; double z = 6.0; string tc = "null";
+	double hasl = 500.0; double z = 6.0; string tc = "I";
 	WindLoad WL(zone, hasl, z, tc);
 	double Iv = WL.calculate_turbulence_intensity(z, tc);
 	cout<< Iv <<endl;
+
+	double v_m = WL.calculate_mean_wind_velocity_NA1(z, tc);
+	cout << v_m << endl;
 
 	return 0;
 }

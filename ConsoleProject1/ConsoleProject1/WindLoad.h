@@ -13,10 +13,12 @@ public:
 	WindLoad(int zone, double sea_level, double z, string category);		//constructor
 	WindLoad(const WindLoad&);									//copy constructor
 	WindLoad& operator = (const WindLoad&);						//copy assignment
+							
+								//A DESTRUCTOR needs to be added!!
 
 	double calculate_turbulence_intensity(double z, string category);
-	double calculate_mean_wind_velocity_NA1(double z, double v_basic_0, string category);
-	double calculate_mean_wind_velocity_NA2(double z, double v_basic_0, string category);
+	double calculate_mean_wind_velocity_NA1(double z, string category);
+	double calculate_mean_wind_velocity_NA2(double z, string category);
 	double calculate_q_p(double mean_velocity, double Iv);
 
 };
