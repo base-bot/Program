@@ -96,19 +96,12 @@ double WindLoad::calculate_turbulence_intensity(double z, string category) {
 	
 }
 
-double WindLoad::calculate_mean_wind_velocity_NA1(double z, string category) {
+double WindLoad::calculate_qp1(double z, string category) {
 	double mean_velocity_1, z_min;
-	double probability_factor = 1; 
-	double v_b_0;
+	double v_b;
+	double q_p;
 
-	double return_period;
-	cout << "please enter the return period used to obtain the basic wind velocity (usually 50 years) = "; cin >> return_period;
-	if (return_period < 2.0) {
-		probability_factor = pow((1-0.2*log(-log(1-0.5)))/(1-0.2*log(-log(0.98))),0.5);
-	}
-	else{
-		probability_factor =  pow((1-0.2*log(-log(1-(1/return_period))))/(1-0.2*log(-log(0.98))),0.5);
-	}
+	
 	/*double v_b = v_basic_0 * probability_factor;*/
 	
 	while (category != "I" && category != "II" && category != "III" && category != "IV") {
@@ -121,69 +114,119 @@ double WindLoad::calculate_mean_wind_velocity_NA1(double z, string category) {
 			cout << "Terrain Category = "; cin >> category;
 		}
 	}
+	int zone = get_zone();
+	double sea_level = get_sea_level();
+	
+	v_b = calculate_vb(zone, sea_level, z);
 
 	if (category == "I"){
 		z_min = 2;
-		v_b_0 = 22.5;
-		
+
 		if (z < z_min) {
-			mean_velocity_1 = 0.97*v_b_0*probability_factor;
-			return mean_velocity_1;
+			mean_velocity_1 = 0.97*v_b;
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 1.9 * 0.5 * 1.245 * pow(v_b,2) / 1000;
+			return q_p;
 		}
 		else {
 			mean_velocity_1 = 1.18 * v_b * pow(z / 10, 0.12);
-			return mean_velocity_1;
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 2.6 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.19);
+			return q_p;
 		}
 	}
 	else if (category == "II"){
 		z_min = 4;
-		v_b_0 = 25.0;
+		
 		if (z < z_min) {
-			mean_velocity_1 = 0.86 * v_b_0*probability_factor;
-			return mean_velocity_1;
+			mean_velocity_1 = 0.86 * v_b;
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 1.7 * 0.5 * 1.245 * pow(v_b,2) / 1000;
+			return q_p;
 		}
 		else {
-			mean_velocity_1 = v_b_0 * probability_factor * pow(z / 10, 0.16);
-			return mean_velocity_1;
+			mean_velocity_1 = v_b  * pow(z / 10, 0.16);
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 2.1 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.24);
+			return q_p;
 		}
 	}	
 	else if (category == "III"){
 		z_min = 8;
-		v_b_0 = 27.5;
 
 		if (z < z_min) {
-			mean_velocity_1 = 0.74 * v_b_0 * probability_factor;
-			return mean_velocity_1;
+			mean_velocity_1 = 0.74 * v_b ;
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 1.5 * 0.5 * 1.245 * pow(v_b,2) / 1000;
+			return q_p;
 		}
 		else {
-			mean_velocity_1 = 0.77 * v_b_0 * probability_factor * pow(z / 10, 0.22);
-			return mean_velocity_1;
+			mean_velocity_1 = 0.77 * v_b  * pow(z / 10, 0.22);
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 1.6 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.31);
+			return q_p;
 		}
 	}
 	else if (category == "IV"){
 		z_min = 16;
-		v_b_0 = 30.0;
 
 		if (z < z_min) {
-			mean_velocity_1 = 0.64 * v_b_0 * probability_factor;
-			return mean_velocity_1;
+			mean_velocity_1 = 0.64 * v_b ;
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 1.3 * 0.5 * 1.245 * pow(v_b,2) / 1000;
+			return q_p;
 		}
 		else {
-			mean_velocity_1 = 0.56 * v_b_0 * probability_factor * pow(z / 10, 0.3);
-			return mean_velocity_1;
+			mean_velocity_1 = 0.56 * v_b  * pow(z / 10, 0.3);
+			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+			q_p = 1.1 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.4);
+			return q_p;
 		}
 	}
 }
 
-double WindLoad::calculate_mean_wind_velocity_NA2(double z, string category) {
-	//double vm1 = calculate_mean_wind_velocity_NA1(z, v_basic_0, category);
-	//double topography_factor = 1;   //This should be then updated with a function based on Annex A.3
-	//
-	//double mean_velocity_2 = vm1 * topography_factor;
-	//
-	//return mean_velocity_2;
+double WindLoad::calculate_mean_wind_velocity_NA2(double z, string category){
+	// double *qp1 = calculate_qp1(z, category)->mean_velocity_1;
+	// double topography_factor = 0.9;   //This should be then updated with a function based on Annex A.3
+	
+	// cout << *qp1 << endl;
+	// double mean_velocity_2 = mean_velocity_1 * topography_factor;
+	
+	// return mean_velocity_2;
 }
 
-double WindLoad::calculate_q_p(double mean_velocity, double Iv){
+double calculate_vb(int zone, double sea_level, double z){
+	double v_b_0;
+	
+	while (zone != 1 && zone != 2 && zone != 3 && zone != 4) {
+		cout << "you have entered a False Wind Zone, please retry using 1, 2, 3 or 4" << endl;
+		cout << "Wind Zone = "; cin >> zone;
+	}
 
+	switch (zone){
+	case 1:
+		v_b_0 = 22.5;
+	case 2:
+		v_b_0 = 25;
+	case 3:
+		v_b_0 = 27.5;
+	case 4:
+		v_b_0 = 30;
+	}
+	if (sea_level > 800) {
+		v_b_0 = v_b_0 * sqrt(0.2 + (sea_level/1000));
+	}
+	double probability_factor = 1; 
+	double return_period;
+
+	cout << "please enter the return period used to obtain the basic wind velocity (usually 50 years) = "; cin >> return_period;
+	if (return_period < 2.0) {
+		probability_factor = pow((1-0.2*log(-log(1-0.5)))/(1-0.2*log(-log(0.98))),0.5);
+	}
+	else{
+		probability_factor =  pow((1-0.2*log(-log(1-(1/return_period))))/(1-0.2*log(-log(0.98))),0.5);
+	}
+	cout << "Your probability factor turned out to be = " << probability_factor << endl;
+
+	return v_b_0*probability_factor;
 }

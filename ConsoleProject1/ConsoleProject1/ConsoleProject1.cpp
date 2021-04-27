@@ -106,8 +106,11 @@ int main()
 	double Iv = WL.calculate_turbulence_intensity(z, tc);
 	cout<< Iv <<endl;
 
-	double v_m = WL.calculate_mean_wind_velocity_NA1(z, tc);
-	cout << v_m << endl;
+	double v_m1 = WL.calculate_qp1(z, tc);
+	cout << v_m1 << endl;
+
+	// double v_m2 = WL.calculate_mean_wind_velocity_NA2(z, tc);
+	// cout << v_m2 << endl;
 
 	return 0;
 }
