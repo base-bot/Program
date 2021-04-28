@@ -1,5 +1,4 @@
 ﻿  ConsoleProject1.cpp
-ConsoleProject1.obj : error LNK2019: unresolved external symbol "public: __thiscall WindLoad::WindLoad(int,double,double,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (??0WindLoad@@QAE@HNNV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function _main
-ConsoleProject1.obj : error LNK2019: unresolved external symbol "public: double __thiscall WindLoad::calculate_turbulence_intensity(double,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?calculate_turbulence_intensity@WindLoad@@QAENNV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function _main
-ConsoleProject1.obj : error LNK2019: unresolved external symbol "public: double __thiscall WindLoad::calculate_mean_wind_velocity_NA1(double,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?calculate_mean_wind_velocity_NA1@WindLoad@@QAENNV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z) referenced in function _main
-C:\Users\b.saridar\source\repos\Program\ConsoleProject1\Debug\ConsoleProject1.exe : fatal error LNK1120: 3 unresolved externals
+C:\Users\b.saridar\source\repos\Program\ConsoleProject1\ConsoleProject1\WindLoad.cpp(206,2): error C2065: 'wind_zone': undeclared identifier
+C:\Users\b.saridar\source\repos\Program\ConsoleProject1\ConsoleProject1\WindLoad.cpp(207,2): error C2065: 'height_structure': undeclared identifier
+C:\Users\b.saridar\source\repos\Program\ConsoleProject1\ConsoleProject1\WindLoad.cpp(208,2): error C2065: 'height_above_sea_level': undeclared identifier

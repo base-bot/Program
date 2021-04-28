@@ -103,7 +103,8 @@ double WindLoad::calculate_qp1(double z, string category) {
 	double mean_velocity_1, z_min;
 	double v_b;
 	double q_p;
-
+	height_structure = z;
+	terrain_category = category;
 	
 	/*double v_b = v_basic_0 * probability_factor;*/
 	
@@ -119,8 +120,8 @@ double WindLoad::calculate_qp1(double z, string category) {
 	}
 	int zone = get_zone();
 	double sea_level = get_sea_level();
-	
 	v_b = calculate_vb(zone, sea_level, z);
+	cout << "Your Basic Wind Velocity is = " << v_b << endl;
 
 	if (category == "I"){
 		z_min = 2;
@@ -129,12 +130,14 @@ double WindLoad::calculate_qp1(double z, string category) {
 			mean_velocity_1 = 0.97*v_b;
 			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
 			q_p = 1.9 * 0.5 * 1.245 * pow(v_b,2) / 1000;
+			cout << zone << endl;
 			return q_p;
 		}
 		else {
 			mean_velocity_1 = 1.18 * v_b * pow(z / 10, 0.12);
 			cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
 			q_p = 2.6 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.19);
+			cout << zone << endl;
 			return q_p;
 		}
 	}
@@ -200,6 +203,9 @@ double WindLoad::calculate_mean_wind_velocity_NA2(double z, string category){
 
 double calculate_vb(int zone, double sea_level, double z){
 	double v_b_0;
+	wind_zone = zone;
+	height_structure = z;
+	height_above_sea_level = sea_level;
 	
 	while (zone != 1 && zone != 2 && zone != 3 && zone != 4) {
 		cout << "you have entered a False Wind Zone, please retry using 1, 2, 3 or 4" << endl;
