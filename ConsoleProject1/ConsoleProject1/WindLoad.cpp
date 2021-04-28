@@ -33,9 +33,12 @@ WindLoad& WindLoad::operator = (const WindLoad& WL) {
 }
 
 double WindLoad::calculate_turbulence_intensity(double z, string category) {
+	height_structure = z;
+	terrain_category = category;
+	
 	double z_min;
 	double Iv;
-	
+
 	while (category != "I" && category != "II" && category != "III" && category != "IV") {
 		if (category == "null"){
 			cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
@@ -190,9 +193,9 @@ double WindLoad::calculate_mean_wind_velocity_NA2(double z, string category){
 	// double topography_factor = 0.9;   //This should be then updated with a function based on Annex A.3
 	
 	// cout << *qp1 << endl;
-	// double mean_velocity_2 = mean_velocity_1 * topography_factor;
+	 double mean_velocity_2 = 1.0;
 	
-	// return mean_velocity_2;
+	 return mean_velocity_2;
 }
 
 double calculate_vb(int zone, double sea_level, double z){

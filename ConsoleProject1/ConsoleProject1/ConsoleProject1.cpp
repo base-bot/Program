@@ -3,7 +3,7 @@
 
 //#include <iostream>
 #include <ios>
-#include "WindLoad.h"
+#include "WindLoad.cpp"
 
 //using namespace std;
 
