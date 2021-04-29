@@ -3,7 +3,7 @@
 
 //#include <iostream>
 #include <ios>
-#include "WindLoad.cpp"
+#include "WindLoad.h"
 
 //using namespace std;
 
@@ -104,7 +104,7 @@ int main()
 	double hasl = 500.0; double z = 6.0; string tc = "I";
 	WindLoad WL(zone, hasl, z, tc);
 	double Iv = WL.calculate_turbulence_intensity(z, tc);
-	int g = WL.get_zone();
+	// int g = WL.get_zone();
 	cout<< Iv <<endl;
 
 	double v_m1 = WL.calculate_qp1(z, tc);

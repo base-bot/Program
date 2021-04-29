@@ -192,16 +192,16 @@ double WindLoad::calculate_qp1(double z, string category) {
 }
 
 double WindLoad::calculate_mean_wind_velocity_NA2(double z, string category){
-	// double *qp1 = calculate_qp1(z, category)->mean_velocity_1;
-	// double topography_factor = 0.9;   //This should be then updated with a function based on Annex A.3
+	double qp1 = calculate_qp1(z, category);
+	double topography_factor = 0.9;   //This should be then updated with a function based on Annex A.3
 	
 	// cout << *qp1 << endl;
-	 double mean_velocity_2 = 1.0;
+	 double mean_velocity_2 =  topography_factor;
 	
 	 return mean_velocity_2;
 }
 
-double calculate_vb(int zone, double sea_level, double z){
+double WindLoad::calculate_vb(int zone, double sea_level, double z){
 	double v_b_0;
 	wind_zone = zone;
 	height_structure = z;
