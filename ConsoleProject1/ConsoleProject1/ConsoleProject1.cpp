@@ -100,18 +100,15 @@ int main()
 
 	double mounting_system_surface_weight = 1.9; //This needs to be updated depending on the new system and if a new middle rail is added....basically taking into consideration all possible varieties
 	// surface_dead_weight = (module_weight / (module_length * module_width)) + mounting_system_surface_weight;
-	int zone = 1;
-	double hasl = 500.0; double z = 6.0; string tc = "I";
+	int zone = 2;
+	double hasl = 50.0; double z = 6.5; string tc = "II";
 	WindLoad WL(zone, hasl, z, tc);
-	double Iv = WL.calculate_turbulence_intensity(z, tc);
-	// int g = WL.get_zone();
-	cout<< Iv <<endl;
+	
+	double qp1 = WL.calculate_qp1(z, tc);
+	cout << qp1 << endl;
 
-	double v_m1 = WL.calculate_qp1(z, tc);
-	cout << v_m1 << endl;
-
-	// double v_m2 = WL.calculate_mean_wind_velocity_NA2(z, tc);
-	// cout << v_m2 << endl;
+	double qp2 = WL.calculate_qp2(z, tc);
+	cout << qp2 << endl;
 
 	return 0;
 }

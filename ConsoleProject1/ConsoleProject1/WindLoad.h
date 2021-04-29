@@ -16,9 +16,8 @@ public:
 							
 								//A DESTRUCTOR needs to be added!!
 
-	double calculate_turbulence_intensity(double z, string category);
+	double calculate_qp2(double z, string category);
 	double calculate_qp1(double z, string category);
-	double calculate_mean_wind_velocity_NA2(double z, string category);
 	
 	double calculate_vb(int zone, double sea_level, double z);
 	
