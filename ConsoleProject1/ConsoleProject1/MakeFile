@@ -1,0 +1,6 @@
+all:
+	g++ WindLoad.cpp -c -o ./WindLoad.o
+	g++ SnowLoad.cpp -c -o ./SnowLoad.o
+	g++ ConsoleProject1.cpp WindLoad.o SnowLoad.o -o ./ConsoleProject1
+clean:
+	rm ./ConsoleProject1

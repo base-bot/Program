@@ -4,6 +4,7 @@
 //#include <iostream>
 #include <ios>
 #include "WindLoad.h"
+#include "SnowLoad.h"
 
 //using namespace std;
 
@@ -59,7 +60,7 @@ int main()
 	// while (parapet_trial < total_trials){
 	// 	cout << "Are there parapets? "; cin >> parapets;
 	// 	if (parapets == "Y" || parapets == "y" || parapets == "Yes" || parapets == "YES" || parapets == "yes") {
-	// 		cout << "please specifiy Parapets' height in meters = "; cin >> parapets_height;
+	// 		cout << "please specify Parapets' height in meters = "; cin >> parapets_height;
 	// 		break;
 	// 	}
 	// 	else if (parapets == "N" || parapets == "n" || parapets == "No" || parapets == "NO" || parapets == "no") {
@@ -100,15 +101,18 @@ int main()
 
 	double mounting_system_surface_weight = 1.9; //This needs to be updated depending on the new system and if a new middle rail is added....basically taking into consideration all possible varieties
 	// surface_dead_weight = (module_weight / (module_length * module_width)) + mounting_system_surface_weight;
-	int zone = 2;
-	double hasl = 50.0; double z = 6.5; string tc = "II";
-	WindLoad WL(zone, hasl, z, tc);
+	int w_zone = 1;
+	double hasl = 285.0; double z = 11.8; string tc = "III";
+	WindLoad WL(w_zone, hasl, z, tc);
 	
 	double qp1 = WL.calculate_qp1(z, tc);
-	cout << qp1 << endl;
 
 	double qp2 = WL.calculate_qp2(z, tc);
-	cout << qp2 << endl;
+
+	float s_zone = 2.5; double alpha = 25.0; 
+	SnowLoad SL(s_zone, alpha, hasl);
+
+	double s = SL.calculate_s(s_zone, alpha, hasl);
 
 	return 0;
 }

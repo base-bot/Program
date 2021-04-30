@@ -39,8 +39,8 @@ double WindLoad::calculate_qp1(double z, string category) {
 	height_structure = z;
 	terrain_category = category;
 	
-	/*double v_b = v_basic_0 * probability_factor;*/
-	
+	cout << "calculating qp according to NA1.1" << endl;
+
 	while (category != "I" && category != "II" && category != "III" && category != "IV") {
 		if (category == "null"){
 			cout << "you have entered a false terrain category for Germany, please try again using I, II, III or IV,\nThank you" << endl;
@@ -104,7 +104,8 @@ double WindLoad::calculate_qp1(double z, string category) {
 			q_p = 1.1 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.4);
 		}
 	}
-	cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+	cout << "v_m = " << mean_velocity_1 << endl;
+	cout << "q_p2 = " << q_p << endl;
 	return q_p;
 }
 
@@ -117,6 +118,9 @@ double WindLoad::calculate_qp2(double z, string category) {
 	double q_p;
 	double z_min;
 	double Iv;
+
+	cout << "calculating qp according to NA1.4" << endl;
+
 
 	double topography_factor = 1.0;
 
@@ -134,7 +138,7 @@ double WindLoad::calculate_qp2(double z, string category) {
 	int zone = get_zone();
 	double sea_level = get_sea_level();
 	v_b = calculate_vb(zone, sea_level, z);
-	cout << "Your Basic Wind Velocity is = " << v_b << endl;
+	cout << "vb = " << v_b << endl;
 		
 	if (category == "I"){
 		z_min = 2;
@@ -183,8 +187,10 @@ double WindLoad::calculate_qp2(double z, string category) {
 		}
 	}
 	mean_velocity_1 = mean_velocity_1*topography_factor;
-	cout << "The mean velocity turned out to be v_m = " << mean_velocity_1 << endl;
+	cout << "Iv = " << Iv << endl; 
+	cout << "v_m = " << mean_velocity_1 << endl;
 	q_p = (1+6*Iv)*1.245*0.5*pow(mean_velocity_1,2)/1000;
+	cout << "q_p1 = " << q_p << endl;
 	return q_p;
 }
 
