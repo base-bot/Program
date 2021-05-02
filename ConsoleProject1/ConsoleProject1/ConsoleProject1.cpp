@@ -101,15 +101,27 @@ int main()
 
 	double mounting_system_surface_weight = 1.9; //This needs to be updated depending on the new system and if a new middle rail is added....basically taking into consideration all possible varieties
 	// surface_dead_weight = (module_weight / (module_length * module_width)) + mounting_system_surface_weight;
-	int w_zone = 1;
-	double hasl = 285.0; double z = 11.8; string tc = "III";
+	
+	int w_zone;
+	double hasl; double z; string tc;
+
+	cout << "please enter the information below to determine the Wind Load: \nthe zone between 1,2,3 and 4: ";
+	cin >> w_zone;
+	cout << "the height above sea level (in m): "; cin>>hasl;
+	cout << "the height of the building/structure (in m)"; cin >> z;
+	cout << "the terrain category between I, II, III and IV"; cin >> tc;
+
 	WindLoad WL(w_zone, hasl, z, tc);
 	
 	double qp1 = WL.calculate_qp1(z, tc);
 
 	double qp2 = WL.calculate_qp2(z, tc);
+	
+	float s_zone; double alpha; 
 
-	float s_zone = 2.5; double alpha = 25.0; 
+	cout << "please enter the information below to determine the Snow Load: \nthe snow zone between 1, 1.5, 2, 2.5 and 3: "; cin>> s_zone;
+	cout << "the roof angle in degrees (°): "; cin>>alpha;
+	
 	SnowLoad SL(s_zone, alpha, hasl);
 
 	double s = SL.calculate_s(s_zone, alpha, hasl);

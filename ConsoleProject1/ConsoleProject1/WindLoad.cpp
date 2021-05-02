@@ -54,7 +54,7 @@ double WindLoad::calculate_qp1(double z, string category) {
 	int zone = get_zone();
 	double sea_level = get_sea_level();
 	v_b = calculate_vb(zone, sea_level, z);
-	cout << "Your Basic Wind Velocity is = " << v_b << endl;
+	cout << "Your Basic Wind Velocity is = " << v_b << "m/s" << endl;
 
 	if (category == "I"){
 		z_min = 2;
@@ -104,8 +104,8 @@ double WindLoad::calculate_qp1(double z, string category) {
 			q_p = 1.1 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.4);
 		}
 	}
-	cout << "v_m = " << mean_velocity_1 << endl;
-	cout << "q_p2 = " << q_p << endl;
+	cout << "v_m = " << mean_velocity_1 << "m/s" << endl;
+	cout << "q_p2 = " << q_p << "kN/m2" << endl;
 	return q_p;
 }
 
@@ -138,7 +138,7 @@ double WindLoad::calculate_qp2(double z, string category) {
 	int zone = get_zone();
 	double sea_level = get_sea_level();
 	v_b = calculate_vb(zone, sea_level, z);
-	cout << "vb = " << v_b << endl;
+	cout << "vb = " << v_b << "m/s" << endl;
 		
 	if (category == "I"){
 		z_min = 2;
@@ -188,9 +188,9 @@ double WindLoad::calculate_qp2(double z, string category) {
 	}
 	mean_velocity_1 = mean_velocity_1*topography_factor;
 	cout << "Iv = " << Iv << endl; 
-	cout << "v_m = " << mean_velocity_1 << endl;
+	cout << "v_m = " << mean_velocity_1 << "m/s" << endl;
 	q_p = (1+6*Iv)*1.245*0.5*pow(mean_velocity_1,2)/1000;
-	cout << "q_p1 = " << q_p << endl;
+	cout << "q_p1 = " << q_p  << "kN/m2" << endl;
 	return q_p;
 }
 

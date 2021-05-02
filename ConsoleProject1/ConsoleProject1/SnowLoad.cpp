@@ -133,6 +133,6 @@ double SnowLoad::calculate_s(float zone, double angle, double sea_level){
     double sk = calculate_sk(zone, sea_level);
     
     s = temperature_coeff * surrounding_coeff * expectancy_coeff * mu * sk;
-    cout << "The Snow Load turned out to be = " << s << endl;
+    cout << "The Snow Load turned out to be = " << s << "kN/m2" << endl;
     return s;
 }
