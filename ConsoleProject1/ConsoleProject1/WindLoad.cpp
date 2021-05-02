@@ -5,13 +5,15 @@ WindLoad::WindLoad() {
 	wind_zone = 0;
 	height_structure = 0;
 	height_above_sea_level = 0.0;
+	roof_angle = 0.0;
 	terrain_category = "null";
 }
 
-WindLoad::WindLoad(int zone, double sea_level, double z, string category) {
+WindLoad::WindLoad(int zone, double sea_level, double z, double alpha, string category) {
 	wind_zone = zone;
 	height_structure = z;
 	height_above_sea_level = sea_level;
+	roof_angle = alpha;
 	terrain_category = category;
 }
 
@@ -19,6 +21,7 @@ WindLoad::WindLoad(const WindLoad& WL) {
 	wind_zone = WL.wind_zone;
 	height_above_sea_level = WL.height_above_sea_level;
 	height_structure = WL.height_structure;
+	roof_angle = WL.roof_angle;
 	terrain_category = WL.terrain_category;
 }
 
@@ -27,6 +30,7 @@ WindLoad& WindLoad::operator = (const WindLoad& WL) {
 		wind_zone = WL.wind_zone;
 		height_above_sea_level = WL.height_above_sea_level;
 		height_structure = WL.height_structure;
+		roof_angle = WL.roof_angle;
 		terrain_category = WL.terrain_category;
 	}
 	return *this;

@@ -104,23 +104,24 @@ int main()
 	
 	int w_zone;
 	double hasl; double z; string tc;
-
+	double alpha; 
+	
 	cout << "please enter the information below to determine the Wind Load: \nthe zone between 1,2,3 and 4: ";
 	cin >> w_zone;
 	cout << "the height above sea level (in m): "; cin>>hasl;
 	cout << "the height of the building/structure (in m)"; cin >> z;
 	cout << "the terrain category between I, II, III and IV"; cin >> tc;
+	cout << "the roof angle in degrees (°): "; cin>>alpha;
 
-	WindLoad WL(w_zone, hasl, z, tc);
+	WindLoad WL(w_zone, hasl, z, alpha, tc);
 	
 	double qp1 = WL.calculate_qp1(z, tc);
 
 	double qp2 = WL.calculate_qp2(z, tc);
 	
-	float s_zone; double alpha; 
+	float s_zone; 
 
 	cout << "please enter the information below to determine the Snow Load: \nthe snow zone between 1, 1.5, 2, 2.5 and 3: "; cin>> s_zone;
-	cout << "the roof angle in degrees (°): "; cin>>alpha;
 	
 	SnowLoad SL(s_zone, alpha, hasl);
 
