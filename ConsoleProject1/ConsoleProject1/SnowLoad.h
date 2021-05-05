@@ -3,7 +3,7 @@
 using namespace std;
 
 class SnowLoad {
-private:
+protected:
     float snow_zone;
     double roof_angle;
     double height_above_sea_level;

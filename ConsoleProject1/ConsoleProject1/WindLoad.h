@@ -3,7 +3,7 @@
 using namespace std;
 
 class WindLoad {
-private:
+protected:
 	int wind_zone;
 	double height_above_sea_level, height_structure, roof_angle;
 	string terrain_category;
