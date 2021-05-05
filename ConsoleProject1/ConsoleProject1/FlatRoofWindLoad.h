@@ -15,5 +15,5 @@ class FlatRoofWindLoad : public WindLoad{
 
     double pitch_angle_correction(double alpha, double friction);
     double ridge_gap_correction(double gap);
-    double parapet_correction(bool deflectors, double ppt_height);
+    double parapet_correction(double ppt_height, double z);
 };

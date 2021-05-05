@@ -24,5 +24,4 @@ public:
 	int get_zone(){return wind_zone;}
 	double get_sea_level(){return height_above_sea_level;}
 
-	double flat_roof_pitch_angle_correction()
 };
