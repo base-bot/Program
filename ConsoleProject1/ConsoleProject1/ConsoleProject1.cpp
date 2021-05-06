@@ -3,8 +3,8 @@
 
 //#include <iostream>
 #include <ios>
-#include "WindLoad.h"
-#include "SnowLoad.h"
+#include "SnowLoad.cpp"
+#include "FlatRoofWindLoad.cpp"
 
 //using namespace std;
 

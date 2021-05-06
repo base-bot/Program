@@ -1,4 +1,5 @@
-#include "WindLoad.h"
+#include "WindLoad.cpp"
+
 
 class FlatRoofWindLoad : public WindLoad{
     protected:
@@ -13,7 +14,9 @@ class FlatRoofWindLoad : public WindLoad{
 							
 								//A DESTRUCTOR needs to be added!!
 
-    double pitch_angle_correction(double alpha, double friction);
+    double *pitch_angle_correction(double alpha, double friction);
     double ridge_gap_correction(double gap);
-    double parapet_correction(double ppt_height, double z);
+    double *parapet_correction(double ppt_height, double z);
+
+    double update_qp(double alpha, double gap, double ppt_height, double friction, bool deflectors);
 };

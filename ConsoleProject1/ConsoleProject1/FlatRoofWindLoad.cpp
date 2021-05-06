@@ -39,12 +39,12 @@ FlatRoofWindLoad& FlatRoofWindLoad::operator = (const FlatRoofWindLoad& FR){
 							
 								//A DESTRUCTOR needs to be added!!
 
-double FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
+double *FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
     roof_angle = alpha;
     friction_factor = friction;
     double uplift;
     double sliding;
-    std::vector<double> angle_correction_coeff(2);
+    double angle_correction_coeff[2];
 
     while (abs(alpha) > 5.0) {
 		cout << "you have entered a false angle for a flat roof study, please try again using a value between -5.0 and 5.0,\nThank you" << endl;
@@ -68,7 +68,7 @@ double FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
     }
     angle_correction_coeff[0] = uplift;
     angle_correction_coeff[1] = sliding;
-    return angle_correction_coeff();
+    return angle_correction_coeff;
 }
 double FlatRoofWindLoad::ridge_gap_correction(double gap){
     ridge_gap = gap;
@@ -96,11 +96,11 @@ double FlatRoofWindLoad::ridge_gap_correction(double gap){
     return gap_correction;
 }
 
-double FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
+double *FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
     parapet_height = ppt_height;
     height_structure = z;
 
-    std::vector<double> parapet_correction_coeff(2);
+    double parapet_correction_coeff[2];
 
     int number_modules_per_array_1 = 1;
     double coeff_wo_parapet_1 = 1.0;
@@ -138,7 +138,7 @@ double FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
 
     int double_modules_per_row_sliding;
     int number_of_rows_sliding;
-    cout << "please enter the number of double modules per row which share loads for SLIDING(1 to 8):   "; cin >> double_modules_per_row_uplift;
+    cout << "please enter the number of double modules per row which share loads for SLIDING(1 to 8):   "; cin >> double_modules_per_row_sliding;
     cout << "now enter the number of rows which share loads (1 to 8) for SLIDING:    "; cin >> number_of_rows_sliding;
 
     int small_arrays = 4;
@@ -194,4 +194,10 @@ double FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
     parapet_correction_coeff[1] = parapet_coeff_sliding;
 
     return parapet_correction_coeff;
+}
+
+double FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height, double friction, bool deflectors) {
+    double qp;
+
+    return qp;
 }
