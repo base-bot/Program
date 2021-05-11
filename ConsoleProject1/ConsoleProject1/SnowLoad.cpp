@@ -42,7 +42,7 @@ double SnowLoad::calculate_form_factor(double angle){
     if (abs(angle)<30.0){
     mu = 0.8;
     }
-    else if (30.0<=abs(angle)<60.0){
+    else if (30.0<=abs(angle) && abs(angle) <60.0){
     mu = 0.8*((60-abs(angle))/30);
     }
     else if (abs(angle)>= 60.0){

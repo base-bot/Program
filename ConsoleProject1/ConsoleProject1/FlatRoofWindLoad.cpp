@@ -64,6 +64,7 @@ double *FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
     }
     angle_correction_coeff[0] = uplift;
     angle_correction_coeff[1] = sliding;
+
     return angle_correction_coeff;
 }
 double FlatRoofWindLoad::ridge_gap_correction(double gap){
@@ -192,7 +193,7 @@ double *FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
     return parapet_correction_coeff;
 }
 
-void FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height, double friction) {
+double *FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height, double friction) {
     roof_angle = alpha;
     ridge_gap = gap;
     parapet_height = ppt_height;
@@ -233,22 +234,34 @@ void FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height, do
 
     double * angle_coeff;
     angle_coeff = pitch_angle_correction(alpha, friction);
-    cout << "\n\n" << *angle_coeff << "\n\n"<< endl;
+
+    
     double * parapet_coeff; 
     parapet_coeff = parapet_correction(ppt_height, z);
     
     double gap_coeff = ridge_gap_correction(gap);
-
-    cout << "\n\n" << *parapet_coeff << "\n\n"<< endl;
-    cout << "\n\n" << gap_coeff << "\n\n"<< endl;
-    cout << "\n\n" << deflectors_coeff << "\n\n"<< endl;
-    cout << "\n\n" << qp << "\n\n"<< endl;
-
-    
+        
     double w_uplift = qp * angle_coeff[0] * parapet_coeff[0] * gap_coeff * deflectors_coeff;
     double w_sliding = qp * angle_coeff[1] * parapet_coeff[1] * gap_coeff * deflectors_coeff;
 
     cout << "your corrected uplift wind load is now equal to\nw_uplift = " << w_uplift << endl;
     cout << "your corrected sliding wind load is now equal to\nw_sliding = " << w_sliding << endl;
+
+    double* wind_load = new double[2];
+
+    wind_load[0] = w_uplift;
+    wind_load[1] = w_sliding;
+
+    return wind_load;
+}
+
+double FlatRoofWindLoad::determine_ballast(double* wind_load) {
+    double wind_load_uplift = wind_load[0];
+    double wind_load_sliding = wind_load[1];
+    double ballast_outerzone = 0;
+    double ballast_innerzone_first = 0;
+    double ballast_innerzone_second = 0;
+
+    return ballast_outerzone;
 
 }

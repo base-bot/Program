@@ -17,5 +17,7 @@ class FlatRoofWindLoad : public WindLoad{
     double ridge_gap_correction(double gap);
     double *parapet_correction(double ppt_height, double z);
 
-    void update_qp(double alpha, double gap, double ppt_height, double friction);
+    double *update_qp(double alpha, double gap, double ppt_height, double friction);
+
+    double determine_ballast(double* wind_load);
 };
