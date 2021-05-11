@@ -5,15 +5,13 @@ WindLoad::WindLoad() {
 	wind_zone = 0;
 	height_structure = 0;
 	height_above_sea_level = 0.0;
-	roof_angle = 0.0;
 	terrain_category = "null";
 }
 
-WindLoad::WindLoad(int zone, double sea_level, double z, double alpha, string category) {
+WindLoad::WindLoad(int zone, double sea_level, double z, string category) {
 	wind_zone = zone;
 	height_structure = z;
 	height_above_sea_level = sea_level;
-	roof_angle = alpha;
 	terrain_category = category;
 }
 
@@ -21,7 +19,6 @@ WindLoad::WindLoad(const WindLoad& WL) {
 	wind_zone = WL.wind_zone;
 	height_above_sea_level = WL.height_above_sea_level;
 	height_structure = WL.height_structure;
-	roof_angle = WL.roof_angle;
 	terrain_category = WL.terrain_category;
 }
 
@@ -30,7 +27,6 @@ WindLoad& WindLoad::operator = (const WindLoad& WL) {
 		wind_zone = WL.wind_zone;
 		height_above_sea_level = WL.height_above_sea_level;
 		height_structure = WL.height_structure;
-		roof_angle = WL.roof_angle;
 		terrain_category = WL.terrain_category;
 	}
 	return *this;
@@ -239,4 +235,29 @@ double WindLoad::calculate_vb(int zone, double sea_level, double z){
 	cout << "Your probability factor turned out to be = " << probability_factor << endl;
 
 	return v_b_0*probability_factor;
+}
+
+int WindLoad::set_zone(){
+	int zone;
+	cout << "please set the zone you wish to add to the analysis\nzone (1, 2, 3 or 4):\t"; 
+	cin >> zone;
+	return zone;
+}
+double WindLoad::set_height_above_sea_level(){
+	double sea_level;
+	cout << "please set the height above the sea level of your project \nheight above sea level (in meters):\t"; 
+	cin >> sea_level;
+	return sea_level;
+}
+double WindLoad::set_height_structure(){
+	double z;
+	cout << "please set the height of the structure of your project \nheight of structure, z (in meters):\t"; 
+	cin >> z;
+	return z;
+}
+string WindLoad::set_terrain_category(){
+	string category;
+	cout << "please set the terrain category of your project \nCategory (I, II, III or IV):\t"; 
+	cin >> category;
+	return category;
 }

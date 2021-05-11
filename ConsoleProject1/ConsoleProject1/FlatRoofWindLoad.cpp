@@ -8,15 +8,13 @@ FlatRoofWindLoad::FlatRoofWindLoad(){
     ridge_gap=0;
     parapet_height=0;
     friction_factor=0;
-    side_deflectors=false;
 }
 
-FlatRoofWindLoad::FlatRoofWindLoad(double alpha, double gap, double ppt_height, double friction, bool deflectors){
+FlatRoofWindLoad::FlatRoofWindLoad(double alpha, double gap, double ppt_height, double friction){
     roof_angle= alpha;
     ridge_gap= gap;
     parapet_height= ppt_height;
     friction_factor= friction;
-    side_deflectors= deflectors;
 }		
 
 FlatRoofWindLoad::FlatRoofWindLoad(const FlatRoofWindLoad& FR){
@@ -24,7 +22,6 @@ FlatRoofWindLoad::FlatRoofWindLoad(const FlatRoofWindLoad& FR){
     ridge_gap= FR.ridge_gap;
     parapet_height= FR.parapet_height;
     friction_factor= FR.friction_factor;
-    side_deflectors= FR.side_deflectors;
 }									//copy constructor
 FlatRoofWindLoad& FlatRoofWindLoad::operator = (const FlatRoofWindLoad& FR){
     if (this != &FR){
@@ -32,7 +29,6 @@ FlatRoofWindLoad& FlatRoofWindLoad::operator = (const FlatRoofWindLoad& FR){
         ridge_gap= FR.ridge_gap;
         parapet_height= FR.parapet_height;
         friction_factor= FR.friction_factor;
-        side_deflectors= FR.side_deflectors;
     }
     return *this;
 }					//copy assignment
@@ -44,7 +40,7 @@ double *FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
     friction_factor = friction;
     double uplift;
     double sliding;
-    double angle_correction_coeff[2];
+    double* angle_correction_coeff = new double[2];
 
     while (abs(alpha) > 5.0) {
 		cout << "you have entered a false angle for a flat roof study, please try again using a value between -5.0 and 5.0,\nThank you" << endl;
@@ -73,15 +69,15 @@ double *FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
 double FlatRoofWindLoad::ridge_gap_correction(double gap){
     ridge_gap = gap;
 
-    double ridge_gap_1 = 50;
+    double ridge_gap_1 = 50.0;
     double coeff_1 = 1.2;
     double ridge_gap_2 = 94.3;
     double coeff_2 = 1.0;
-    double ridge_gap_3 = 300;
+    double ridge_gap_3 = 300.0;
     double coeff_3 = 1.0;
 
-    double correction_coefficient_1 = coeff_2 + (coeff_1/(coeff_2-1))*((gap-ridge_gap_2)/ridge_gap_1-ridge_gap_2);
-    double correction_coefficient_2 = coeff_2 + (coeff_3/(coeff_2-1))*((gap-ridge_gap_2)/ridge_gap_3-ridge_gap_2);
+    double correction_coefficient_1 = coeff_2 + (coeff_1/coeff_2-1)*((gap-ridge_gap_2)/(ridge_gap_1-ridge_gap_2));
+    double correction_coefficient_2 = coeff_2 + (coeff_3/coeff_2-1)*((gap-ridge_gap_2)/(ridge_gap_3-ridge_gap_2));
 
     double gap_correction;
     if (gap<ridge_gap_2){
@@ -100,7 +96,7 @@ double *FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
     parapet_height = ppt_height;
     height_structure = z;
 
-    double parapet_correction_coeff[2];
+    double* parapet_correction_coeff = new double [2];
 
     int number_modules_per_array_1 = 1;
     double coeff_wo_parapet_1 = 1.0;
@@ -196,8 +192,63 @@ double *FlatRoofWindLoad::parapet_correction(double ppt_height, double z){
     return parapet_correction_coeff;
 }
 
-double FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height, double friction, bool deflectors) {
-    double qp;
+void FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height, double friction) {
+    roof_angle = alpha;
+    ridge_gap = gap;
+    parapet_height = ppt_height;
+    friction_factor = friction;
 
-    return qp;
+    string side_deflectors;
+    double deflectors_coeff;
+    cout << "does your system contain side deflectors? (Yes or No?):\t";cin >> side_deflectors;
+
+    while (side_deflectors != "Yes" && side_deflectors != "yes" && side_deflectors != "YES" && side_deflectors != "Y" && side_deflectors != "y" && side_deflectors != "No" && side_deflectors != "no" && side_deflectors != "NO" && side_deflectors != "N" && side_deflectors != "n"){
+        cout << "please retry your answer by yes or no: ";
+        cin >> side_deflectors;
+    }
+
+    if (side_deflectors== "Yes" || side_deflectors== "yes" || side_deflectors== "YES" || side_deflectors== "Y" || side_deflectors== "y"){
+        deflectors_coeff = 1.2;
+    }
+    else {
+        deflectors_coeff = 1.0;
+    } 
+
+    int zone = set_zone();
+    double sea_level = set_height_above_sea_level();
+    double z = set_height_structure();
+    string category = set_terrain_category();
+
+    WindLoad WL(zone, sea_level, z, category);
+    double qp1 = WL.calculate_qp1(z, category);
+    double qp2 = WL.calculate_qp2(z, category);
+
+    double qp;
+    if (qp1>=qp2){
+        qp = qp1;        
+    }
+    else{
+        qp=qp2;
+    }
+
+    double * angle_coeff;
+    angle_coeff = pitch_angle_correction(alpha, friction);
+    cout << "\n\n" << *angle_coeff << "\n\n"<< endl;
+    double * parapet_coeff; 
+    parapet_coeff = parapet_correction(ppt_height, z);
+    
+    double gap_coeff = ridge_gap_correction(gap);
+
+    cout << "\n\n" << *parapet_coeff << "\n\n"<< endl;
+    cout << "\n\n" << gap_coeff << "\n\n"<< endl;
+    cout << "\n\n" << deflectors_coeff << "\n\n"<< endl;
+    cout << "\n\n" << qp << "\n\n"<< endl;
+
+    
+    double w_uplift = qp * angle_coeff[0] * parapet_coeff[0] * gap_coeff * deflectors_coeff;
+    double w_sliding = qp * angle_coeff[1] * parapet_coeff[1] * gap_coeff * deflectors_coeff;
+
+    cout << "your corrected uplift wind load is now equal to\nw_uplift = " << w_uplift << endl;
+    cout << "your corrected sliding wind load is now equal to\nw_sliding = " << w_sliding << endl;
+
 }
