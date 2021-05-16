@@ -1,8 +1,8 @@
-#include <iostream>
+#ifndef WINDLOAD_H
 
-using namespace std;
+#include "ProjectData.h"
 
-class WindLoad {
+class WindLoad : public ProjectData {
 protected:
 	int wind_zone;
 	double height_above_sea_level, height_structure;
@@ -16,8 +16,8 @@ public:
 							
 								//A DESTRUCTOR needs to be added!!
 
-	double calculate_qp2(double z, string category);
-	double calculate_qp1(double z, string category);
+	double calculate_qp2(double z, string category, int zone);
+	double calculate_qp1(double z, string category, int zone);
 	
 	double calculate_vb(int zone, double sea_level, double z);
 	
@@ -30,3 +30,4 @@ public:
 	string set_terrain_category();
 
 };
+#endif

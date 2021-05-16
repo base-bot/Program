@@ -1,16 +1,15 @@
-#include <iostream>
+#ifndef SNOWLOAD_H
+#define SNOWLOAD_H
+#include "ProjectData.h"
 
-using namespace std;
-
-class SnowLoad {
+class SnowLoad : public ProjectData{
 protected:
     float snow_zone;
-    double roof_angle;
     double height_above_sea_level;
 
 public:
     SnowLoad();
-    SnowLoad(float zone, double angle, double sea_level);
+    SnowLoad(float zone, double sea_level);
     SnowLoad(const SnowLoad&);
     SnowLoad& operator = (const SnowLoad&);
 
@@ -18,4 +17,6 @@ public:
     double calculate_sk(float zone, double sea_level);
 
     double calculate_s(float zone, double angle, double sea_level);
+    float set_snow_load_zone();
 };
+#endif

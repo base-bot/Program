@@ -1,13 +1,14 @@
+#ifndef FLATROOFWINDLOAD_H
 #include "WindLoad.h"
 
 
 class FlatRoofWindLoad : public WindLoad{
     protected:
-    double roof_angle, ridge_gap, parapet_height, friction_factor;
+    double building_length, building_width, roof_angle, ridge_gap, parapet_height, friction_factor;
 
     public:
     FlatRoofWindLoad();													//default constructor
-	FlatRoofWindLoad(double alpha, double gap, double ppt_height, double friction);		//constructor
+	FlatRoofWindLoad(double bldg_length, double bldg_width,double alpha, double gap, double ppt_height, double friction);		//constructor
 	FlatRoofWindLoad(const FlatRoofWindLoad& FR);									//copy constructor
 	FlatRoofWindLoad& operator = (const FlatRoofWindLoad& FR);						//copy assignment
 							
@@ -19,5 +20,13 @@ class FlatRoofWindLoad : public WindLoad{
 
     double *update_qp(double alpha, double gap, double ppt_height, double friction);
 
-    double determine_ballast(double* wind_load);
+    double determine_ballast(double* wind_load, double *angle_coeff);
+
+    double set_friction_factor_value();
+    double set_building_length();
+    double set_building_width();
+    double set_parapet_height();
+    double set_roof_edge_distance();
+    double get_module_area(double pv_length, double pv_width);
 };
+#endif

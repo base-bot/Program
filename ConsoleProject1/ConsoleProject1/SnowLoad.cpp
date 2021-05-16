@@ -4,33 +4,29 @@
 SnowLoad::SnowLoad() {
 	snow_zone = 0.0;
 	height_above_sea_level = 0.0;
-	roof_angle = 0.0;
 }
 
-SnowLoad::SnowLoad(float zone, double angle, double sea_level) {
+SnowLoad::SnowLoad(float zone, double sea_level) {
 	snow_zone = zone;
 	height_above_sea_level = sea_level;
-	roof_angle = angle;
 }
 
 SnowLoad::SnowLoad(const SnowLoad& SL) {
 	snow_zone = SL.snow_zone;
 	height_above_sea_level = SL.height_above_sea_level;
-	roof_angle = SL.roof_angle;
 }
 
 SnowLoad& SnowLoad::operator = (const SnowLoad& SL) {
 	if (this != &SL) {
 		snow_zone = SL.snow_zone;
 		height_above_sea_level = SL.height_above_sea_level;
-		roof_angle = SL.roof_angle;
 	}
 	return *this;
 }
 
 double SnowLoad::calculate_form_factor(double angle){
+    module_angle = angle;
     double mu;
-    roof_angle = angle;
     bool outside = false;
 
     outside = 0.0 > abs(angle) && abs(angle) > 90.0;
@@ -105,7 +101,7 @@ double SnowLoad::calculate_sk(float zone, double sea_level){
 
 double SnowLoad::calculate_s(float zone, double angle, double sea_level){
     snow_zone = zone;
-    roof_angle = angle;
+    module_angle = angle;
     height_above_sea_level = sea_level;
 
     double s;
@@ -135,4 +131,11 @@ double SnowLoad::calculate_s(float zone, double angle, double sea_level){
     s = temperature_coeff * surrounding_coeff * expectancy_coeff * mu * sk;
     cout << "The Snow Load turned out to be = " << s << "kN/m2" << endl;
     return s;
+}
+
+float SnowLoad::set_snow_load_zone(){
+    float zone;
+	cout << "Snow Load Zone = "; cin >> zone; 
+
+    return zone;
 }

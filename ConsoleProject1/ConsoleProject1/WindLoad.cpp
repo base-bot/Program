@@ -32,13 +32,14 @@ WindLoad& WindLoad::operator = (const WindLoad& WL) {
 	return *this;
 }
 
-double WindLoad::calculate_qp1(double z, string category) {
+double WindLoad::calculate_qp1(double z, string category, int zone) {
 	double mean_velocity_1, z_min;
 	double v_b;
 	double q_p;
 	height_structure = z;
 	terrain_category = category;
-	
+	wind_zone = zone;
+
 	cout << "calculating qp according to NA1.1" << endl;
 
 	while (category != "I" && category != "II" && category != "III" && category != "IV") {
@@ -51,7 +52,6 @@ double WindLoad::calculate_qp1(double z, string category) {
 			cout << "Terrain Category = "; cin >> category;
 		}
 	}
-	int zone = get_zone();
 	double sea_level = get_sea_level();
 	v_b = calculate_vb(zone, sea_level, z);
 	cout << "Your Basic Wind Velocity is = " << v_b << "m/s" << endl;
@@ -109,9 +109,10 @@ double WindLoad::calculate_qp1(double z, string category) {
 	return q_p;
 }
 
-double WindLoad::calculate_qp2(double z, string category) {
+double WindLoad::calculate_qp2(double z, string category, int zone) {
 	height_structure = z;
 	terrain_category = category;
+	wind_zone = zone;
 	
 	double mean_velocity_1;
 	double v_b;
@@ -135,7 +136,6 @@ double WindLoad::calculate_qp2(double z, string category) {
 		}
 	}
 
-	int zone = get_zone();
 	double sea_level = get_sea_level();
 	v_b = calculate_vb(zone, sea_level, z);
 	cout << "vb = " << v_b << "m/s" << endl;
@@ -239,6 +239,7 @@ double WindLoad::calculate_vb(int zone, double sea_level, double z){
 
 int WindLoad::set_zone(){
 	int zone;
+	cout << "please enter the information below to determine the Wind Load:" << endl;
 	cout << "please set the zone you wish to add to the analysis\nzone (1, 2, 3 or 4):\t"; 
 	cin >> zone;
 	return zone;

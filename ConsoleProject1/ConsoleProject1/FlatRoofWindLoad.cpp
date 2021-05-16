@@ -3,18 +3,23 @@
 #include <vector>
 #define PI 3.14159265
 
+
 FlatRoofWindLoad::FlatRoofWindLoad(){
     roof_angle=0;
     ridge_gap=0;
     parapet_height=0;
     friction_factor=0;
+    building_length = 0; 
+    building_width = 0;
 }
 
-FlatRoofWindLoad::FlatRoofWindLoad(double alpha, double gap, double ppt_height, double friction){
+FlatRoofWindLoad::FlatRoofWindLoad(double bldg_length, double bldg_width,double alpha, double gap, double ppt_height, double friction){
     roof_angle= alpha;
     ridge_gap= gap;
     parapet_height= ppt_height;
     friction_factor= friction;
+    building_length = bldg_length; 
+    building_width = bldg_width;
 }		
 
 FlatRoofWindLoad::FlatRoofWindLoad(const FlatRoofWindLoad& FR){
@@ -22,6 +27,8 @@ FlatRoofWindLoad::FlatRoofWindLoad(const FlatRoofWindLoad& FR){
     ridge_gap= FR.ridge_gap;
     parapet_height= FR.parapet_height;
     friction_factor= FR.friction_factor;
+    building_length = FR.building_length; 
+    building_width = FR.building_width;
 }									//copy constructor
 FlatRoofWindLoad& FlatRoofWindLoad::operator = (const FlatRoofWindLoad& FR){
     if (this != &FR){
@@ -29,6 +36,8 @@ FlatRoofWindLoad& FlatRoofWindLoad::operator = (const FlatRoofWindLoad& FR){
         ridge_gap= FR.ridge_gap;
         parapet_height= FR.parapet_height;
         friction_factor= FR.friction_factor;
+        building_length = FR.building_length; 
+        building_width = FR.building_width;
     }
     return *this;
 }					//copy assignment
@@ -221,8 +230,8 @@ double *FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height,
     string category = set_terrain_category();
 
     WindLoad WL(zone, sea_level, z, category);
-    double qp1 = WL.calculate_qp1(z, category);
-    double qp2 = WL.calculate_qp2(z, category);
+    double qp1 = WL.calculate_qp1(z, category, zone);
+    double qp2 = WL.calculate_qp2(z, category, zone);
 
     double qp;
     if (qp1>=qp2){
@@ -252,16 +261,114 @@ double *FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height,
     wind_load[0] = w_uplift;
     wind_load[1] = w_sliding;
 
+    determine_ballast(wind_load, angle_coeff);
+
     return wind_load;
 }
 
-double FlatRoofWindLoad::determine_ballast(double* wind_load) {
-    double wind_load_uplift = wind_load[0];
+double FlatRoofWindLoad::determine_ballast(double* wind_load, double *angle_coeff) {
+    
     double wind_load_sliding = wind_load[1];
+    double angle_coeff_uplift = angle_coeff[0];
+    double angle_coeff_sliding = angle_coeff[1];
+
+    double ballast_outerzone_uplift = 0;
+    double ballast_innerzone_first_uplift = 0;
+    double ballast_innerzone_second_uplift = 0;
+    double ballast_outerzone_sliding = 0;
+    double ballast_innerzone_first_sliding = 0;
+    double ballast_innerzone_second_sliding = 0;
+
     double ballast_outerzone = 0;
     double ballast_innerzone_first = 0;
     double ballast_innerzone_second = 0;
+    
+
+    double load_factor_uplift = 1.5;
+    double load_factor_sliding = 1.5;
+    double dead_load_factor = 0.9;
+
+    double g = 9.81;
+    double panel_surface_area = get_module_area(module_length, module_width);
+    double module_surface_weight = module_mass/panel_surface_area;
+
+
+    double* cf = new double [6];
+    for (int i=0; i<6; i++){
+        cf[i] = 1.0;
+    }
+
+    ballast_outerzone_uplift = 2 * panel_surface_area * (load_factor_uplift * wind_load[0] * cf[0] * angle_coeff[0] - g * dead_load_factor * module_surface_weight);
+    ballast_innerzone_first_uplift = 2 * panel_surface_area * (load_factor_uplift * wind_load[0] * cf[1] * angle_coeff[0] - g * dead_load_factor * module_surface_weight);
+    ballast_innerzone_second_uplift = 2 * panel_surface_area * (load_factor_uplift * wind_load[0] * cf[2] * angle_coeff[0] - g * dead_load_factor * module_surface_weight);
+
+    ballast_outerzone_sliding = 2 * panel_surface_area * (load_factor_sliding * wind_load[1] * cf[3] * angle_coeff[1] - g * dead_load_factor * module_surface_weight);
+    ballast_innerzone_first_sliding = 2 * panel_surface_area * (load_factor_sliding * wind_load[1] * cf[4] * angle_coeff[1] - g * dead_load_factor * module_surface_weight);
+    ballast_innerzone_second_sliding = 2 * panel_surface_area * (load_factor_sliding * wind_load[1] * cf[5] * angle_coeff[1] - g * dead_load_factor * module_surface_weight);
 
     return ballast_outerzone;
 
+}
+
+double FlatRoofWindLoad::set_building_length(){
+	double bldg_length;
+    cout << "Welcome to the Flat Roof System Project Definition!" << endl;
+	cout << "Length of the Building in meters = "; cin >> bldg_length;
+
+    return bldg_length;
+}
+double FlatRoofWindLoad::set_building_width(){
+    double bldg_width;
+	cout << "Width <of the Building in meters = "; cin >> bldg_width;
+
+    return bldg_width;
+}
+double FlatRoofWindLoad::set_parapet_height(){
+    string parapets;
+	double parapets_height;
+	int parapet_trial = 0;
+	
+	while (parapet_trial < 10){
+		cout << "Are there parapets? "; cin >> parapets;
+		if (parapets == "Y" || parapets == "y" || parapets == "Yes" || parapets == "YES" || parapets == "yes") {
+			cout << "please specify Parapets' height in meters = "; cin >> parapets_height;
+			break;
+		}
+		else if (parapets == "N" || parapets == "n" || parapets == "No" || parapets == "NO" || parapets == "no") {
+			parapets_height = 0;
+			break;
+		}
+		else {
+			cout << "trial# " << parapet_trial+1 << "/" << 10 << endl;
+			cout << "please try again and answer by \"yes\" or \"no\"" << endl;
+		}
+		parapet_trial++;
+	}
+	if (parapet_trial == 10) {
+		cout << "										STOP!" << endl;
+		cout << "you have reached the maximum number of trials, please restart and try again" << endl;
+		return 0;
+	}
+    return parapets_height;
+}
+double FlatRoofWindLoad::set_roof_edge_distance(){
+    double roof_edge_distance;
+	cout << "The Distance from the Edge of the Building to the Starting Panels' Corner in meters = "; cin >> roof_edge_distance;
+
+    return roof_edge_distance;
+}
+
+double FlatRoofWindLoad::get_module_area(double pv_length, double pv_width){
+    module_length = pv_length;
+    module_width = pv_width;
+    double pv_area = pv_length * pv_width/pow(10,6);
+
+    return pv_area;
+}
+
+double FlatRoofWindLoad::set_friction_factor_value(){
+    double mu;
+	cout << "Friction Coefficient for the surface between the system and Roof = "; cin >> mu; //This should be then updated into a value that is either given out or standard value between different materials...based on type of roof's surface
+
+    return mu;
 }
