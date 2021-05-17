@@ -1,5 +1,5 @@
 #ifndef FLATROOFWINDLOAD_H
-#include "WindLoad.h"
+#include "WindLoad.cpp"
 
 
 class FlatRoofWindLoad : public WindLoad{

@@ -1,3 +1,5 @@
+#ifndef PROJECTDATA_CPP
+#define PROJECTDATA_CPP
 #include "ProjectData.h"
 #include <math.h>
 
@@ -174,6 +176,7 @@ void ProjectData::review_ProjectData(double bldg_height,double bldg_angle,double
     cout << "Module Width = " << pv_width << "mm" << endl;
     cout << "Module Thickness = " << pv_thickness << "mm" << endl;
     cout << "Module Mass = " << pv_mass << "kg" << endl;
-    cout << "Module Angle = " << pv_angle << "°" << endl;
+    cout << "Module Angle = " << pv_angle << "°\n\n" << endl;
 
 }
+#endif

@@ -1,6 +1,6 @@
 #ifndef WINDLOAD_H
 
-#include "ProjectData.h"
+#include "ProjectData.cpp"
 
 class WindLoad : public ProjectData {
 protected:

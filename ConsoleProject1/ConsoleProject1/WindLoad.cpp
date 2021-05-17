@@ -40,7 +40,7 @@ double WindLoad::calculate_qp1(double z, string category, int zone) {
 	terrain_category = category;
 	wind_zone = zone;
 
-	cout << "calculating qp according to NA1.1" << endl;
+	cout << "\ncalculating qp according to NA1.1\n" << endl;
 
 	while (category != "I" && category != "II" && category != "III" && category != "IV") {
 		if (category == "null"){
@@ -104,8 +104,8 @@ double WindLoad::calculate_qp1(double z, string category, int zone) {
 			q_p = 1.1 * 0.5 * 1.245 * pow(v_b,2) / 1000 * pow(z/10,0.4);
 		}
 	}
-	cout << "v_m = " << mean_velocity_1 << "m/s" << endl;
-	cout << "q_p2 = " << q_p << "kN/m2" << endl;
+	cout << "\nv_m = " << mean_velocity_1 << "m/s" << endl;
+	cout << "q_p1 = " << q_p << "kN/m2\n" << endl;
 	return q_p;
 }
 
@@ -120,7 +120,7 @@ double WindLoad::calculate_qp2(double z, string category, int zone) {
 	double z_min;
 	double Iv;
 
-	cout << "calculating qp according to NA1.4" << endl;
+	cout << "\ncalculating qp according to NA1.4\n" << endl;
 
 
 	double topography_factor = 1.0;
@@ -187,10 +187,10 @@ double WindLoad::calculate_qp2(double z, string category, int zone) {
 		}
 	}
 	mean_velocity_1 = mean_velocity_1*topography_factor;
-	cout << "Iv = " << Iv << endl; 
-	cout << "v_m = " << mean_velocity_1 << "m/s" << endl;
+	cout << "\nIv = " << Iv << endl; 
+	cout << "\nv_m = " << mean_velocity_1 << "m/s" << endl;
 	q_p = (1+6*Iv)*1.245*0.5*pow(mean_velocity_1,2)/1000;
-	cout << "q_p1 = " << q_p  << "kN/m2" << endl;
+	cout << "\nq_p2 = " << q_p  << "kN/m2\n" << endl;
 	return q_p;
 }
 
@@ -201,7 +201,7 @@ double WindLoad::calculate_vb(int zone, double sea_level, double z){
 	height_above_sea_level = sea_level;
 	
 	while (zone != 1 && zone != 2 && zone != 3 && zone != 4) {
-		cout << "you have entered a False Wind Zone, please retry using 1, 2, 3 or 4" << endl;
+		cout << "you have entered a False Wind Zone, please retry using 1, 2, 3 or 4: " << endl;
 		cout << "Wind Zone = "; cin >> zone;
 	}
 
@@ -239,7 +239,7 @@ double WindLoad::calculate_vb(int zone, double sea_level, double z){
 
 int WindLoad::set_zone(){
 	int zone;
-	cout << "please enter the information below to determine the Wind Load:" << endl;
+	cout << "\nplease enter the information below to determine the Wind Load:" << endl;
 	cout << "please set the zone you wish to add to the analysis\nzone (1, 2, 3 or 4):\t"; 
 	cin >> zone;
 	return zone;

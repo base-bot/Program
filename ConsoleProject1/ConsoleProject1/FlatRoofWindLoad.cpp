@@ -68,7 +68,7 @@ double *FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
         sliding = 1.0;
     }
     else {
-        uplift = 1.0/cos(alpha/(180*PI));    
+        uplift = 1.0/cos(alpha/180*PI);    
         sliding = friction/(friction * cos(alpha/(180*PI)) - sin(alpha/(180*PI)));
     }
     angle_correction_coeff[0] = uplift;
@@ -79,11 +79,11 @@ double *FlatRoofWindLoad::pitch_angle_correction(double alpha, double friction){
 double FlatRoofWindLoad::ridge_gap_correction(double gap){
     ridge_gap = gap;
 
-    double ridge_gap_1 = 50.0;
+    double ridge_gap_1 = 0.05;
     double coeff_1 = 1.2;
-    double ridge_gap_2 = 94.3;
+    double ridge_gap_2 = 0.0943;
     double coeff_2 = 1.0;
-    double ridge_gap_3 = 300.0;
+    double ridge_gap_3 = 0.3;
     double coeff_3 = 1.0;
 
     double correction_coefficient_1 = coeff_2 + (coeff_1/coeff_2-1)*((gap-ridge_gap_2)/(ridge_gap_1-ridge_gap_2));
@@ -250,8 +250,9 @@ double *FlatRoofWindLoad::update_qp(double alpha, double gap, double ppt_height,
     
     double gap_coeff = ridge_gap_correction(gap);
         
-    double w_uplift = qp * angle_coeff[0] * parapet_coeff[0] * gap_coeff * deflectors_coeff;
-    double w_sliding = qp * angle_coeff[1] * parapet_coeff[1] * gap_coeff * deflectors_coeff;
+    double w_uplift = qp; //* angle_coeff[0] * parapet_coeff[0] * gap_coeff * deflectors_coeff;
+    double w_sliding = qp; //* angle_coeff[1] * parapet_coeff[1] * gap_coeff * deflectors_coeff;
+
 
     cout << "your corrected uplift wind load is now equal to\nw_uplift = " << w_uplift << endl;
     cout << "your corrected sliding wind load is now equal to\nw_sliding = " << w_sliding << endl;
@@ -272,12 +273,12 @@ double FlatRoofWindLoad::determine_ballast(double* wind_load, double *angle_coef
     double angle_coeff_uplift = angle_coeff[0];
     double angle_coeff_sliding = angle_coeff[1];
 
-    double ballast_outerzone_uplift = 0;
-    double ballast_innerzone_first_uplift = 0;
-    double ballast_innerzone_second_uplift = 0;
-    double ballast_outerzone_sliding = 0;
-    double ballast_innerzone_first_sliding = 0;
-    double ballast_innerzone_second_sliding = 0;
+    double ballast_outerzone_uplift;
+    double ballast_innerzone_first_uplift;
+    double ballast_innerzone_second_uplift;
+    double ballast_outerzone_sliding;
+    double ballast_innerzone_first_sliding;
+    double ballast_innerzone_second_sliding;
 
     double ballast_outerzone = 0;
     double ballast_innerzone_first = 0;
@@ -289,22 +290,30 @@ double FlatRoofWindLoad::determine_ballast(double* wind_load, double *angle_coef
     double dead_load_factor = 0.9;
 
     double g = 9.81;
-    double panel_surface_area = get_module_area(module_length, module_width);
-    double module_surface_weight = module_mass/panel_surface_area;
+    double pv_length = 1660.0;
+    double pv_width = 990.0;
+    double pv_mass = 19.0;
+    double system_surface_mass = 1.9;
 
+    double panel_surface_area = get_module_area(pv_length, pv_width);
+    cout << "\nYour module's area is =  " << panel_surface_area << " m2" << endl;
+    double module_surface_weight = pv_mass/panel_surface_area;
+    cout << "\nYour module's surface mass is =  " << module_surface_weight << " kg/m2" << endl;
 
     double* cf = new double [6];
     for (int i=0; i<6; i++){
         cf[i] = 1.0;
     }
 
-    ballast_outerzone_uplift = 2 * panel_surface_area * (load_factor_uplift * wind_load[0] * cf[0] * angle_coeff[0] - g * dead_load_factor * module_surface_weight);
-    ballast_innerzone_first_uplift = 2 * panel_surface_area * (load_factor_uplift * wind_load[0] * cf[1] * angle_coeff[0] - g * dead_load_factor * module_surface_weight);
-    ballast_innerzone_second_uplift = 2 * panel_surface_area * (load_factor_uplift * wind_load[0] * cf[2] * angle_coeff[0] - g * dead_load_factor * module_surface_weight);
+    ballast_outerzone_uplift = 2 * panel_surface_area * ((load_factor_uplift * wind_load[0] * 0.28 * angle_coeff[0] * 1000 / (dead_load_factor * g)) - ( module_surface_weight + system_surface_mass));
+    ballast_innerzone_first_uplift = 2 * panel_surface_area * ((load_factor_uplift * wind_load[0] * cf[1] * angle_coeff[0] * 1000 / (dead_load_factor * g)) - (module_surface_weight + system_surface_mass));
+    ballast_innerzone_second_uplift = 2 * panel_surface_area * ((load_factor_uplift * wind_load[0] * cf[2] * angle_coeff[0] * 1000 / (dead_load_factor * g)) - (module_surface_weight + system_surface_mass));
 
-    ballast_outerzone_sliding = 2 * panel_surface_area * (load_factor_sliding * wind_load[1] * cf[3] * angle_coeff[1] - g * dead_load_factor * module_surface_weight);
-    ballast_innerzone_first_sliding = 2 * panel_surface_area * (load_factor_sliding * wind_load[1] * cf[4] * angle_coeff[1] - g * dead_load_factor * module_surface_weight);
-    ballast_innerzone_second_sliding = 2 * panel_surface_area * (load_factor_sliding * wind_load[1] * cf[5] * angle_coeff[1] - g * dead_load_factor * module_surface_weight);
+    ballast_outerzone_sliding = 2 * panel_surface_area * ((load_factor_sliding * wind_load[1] * 0.26 * angle_coeff[1] * 1000 / (dead_load_factor * g)) - (module_surface_weight + system_surface_mass));
+    ballast_innerzone_first_sliding = 2 * panel_surface_area * ((load_factor_sliding * wind_load[1] * cf[4] * angle_coeff[1] * 1000 / (dead_load_factor * g)) - (module_surface_weight + system_surface_mass));
+    ballast_innerzone_second_sliding = 2 * panel_surface_area * ((load_factor_sliding * wind_load[1] * cf[5] * angle_coeff[1] * 1000 / (dead_load_factor * g)) - (module_surface_weight + system_surface_mass));
+
+    cout << "Your Required Ballast Mass for your system (per kg/doublemodule) for UPLIFT is:  " << ballast_outerzone_uplift << "  kg/doublemodule" << endl;
 
     return ballast_outerzone;
 
@@ -312,7 +321,6 @@ double FlatRoofWindLoad::determine_ballast(double* wind_load, double *angle_coef
 
 double FlatRoofWindLoad::set_building_length(){
 	double bldg_length;
-    cout << "Welcome to the Flat Roof System Project Definition!" << endl;
 	cout << "Length of the Building in meters = "; cin >> bldg_length;
 
     return bldg_length;
@@ -353,7 +361,8 @@ double FlatRoofWindLoad::set_parapet_height(){
 }
 double FlatRoofWindLoad::set_roof_edge_distance(){
     double roof_edge_distance;
-	cout << "The Distance from the Edge of the Building to the Starting Panels' Corner in meters = "; cin >> roof_edge_distance;
+    cout << "\nWelcome to the Flat Roof System Project Definition!" << endl;
+    cout << "The Distance from the Edge of the Building to the Starting Panels' Corner in meters = "; cin >> roof_edge_distance;
 
     return roof_edge_distance;
 }

@@ -1,6 +1,6 @@
 #ifndef SNOWLOAD_H
 #define SNOWLOAD_H
-#include "ProjectData.h"
+#include "ProjectData.cpp"
 
 class SnowLoad : public ProjectData{
 protected:
